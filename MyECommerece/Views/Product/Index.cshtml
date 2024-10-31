@@ -13,6 +13,11 @@
                     <h5 class="card-title">@product.Name</h5>
                     <p class="card-text">Price: $@product.Price</p>
                 </div>
+                <div class="btn-group">
+                    <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-warning">Delete</a>
+                </div>
+
             </div>
         </div>
     }
