@@ -1,0 +1,13 @@
+﻿@model MyECommerece.Models.Product
+
+<h1>Product Details</h1>
+
+<div class="card">
+    <img src="@Model.PhotoPath" class="card-img-top" alt="@Model.Name" style="height: 400px; object-fit: cover;">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text">Price: $@Model.Price</p>
+        <p class="card-text">@Model.Description</p>
+        <a asp-action="Index" class="btn btn-secondary">Back to Products</a>
+    </div>
+</div>

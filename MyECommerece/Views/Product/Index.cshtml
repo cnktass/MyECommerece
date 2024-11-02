@@ -10,7 +10,9 @@
                 <img src="@product.PhotoPath" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
 
                 <div class="card-body text-center">
-                    <h5 class="card-title">@product.Name</h5>
+                    <h5 class="card-title">
+                        <a asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+                     </h5>
                     <p class="card-text">Price: $@product.Price</p>
                 </div>
                 <div class="btn-group">

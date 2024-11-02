@@ -106,6 +106,23 @@ namespace MyECommerece.Controllers
             }
             return View(product);
         }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,7 +139,7 @@ namespace MyECommerece.Controllers
             return View(product);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
