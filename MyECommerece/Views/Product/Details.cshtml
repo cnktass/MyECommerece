@@ -8,6 +8,11 @@
         <h5 class="card-title">@Model.Name</h5>
         <p class="card-text">Price: $@Model.Price</p>
         <p class="card-text">@Model.Description</p>
+
+        <div class="d-flex justify-content-between">
+        <a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Id" class="btn btn-primary">Add to Cart</a>
         <a asp-action="Index" class="btn btn-secondary">Back to Products</a>
+        </div>
+
     </div>
 </div>
