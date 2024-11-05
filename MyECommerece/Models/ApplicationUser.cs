@@ -5,18 +5,19 @@ namespace MyECommerece.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [Display(Name = "Adı & Soyadı")]
+        [Display(Name = "Name & Surname")]
         public string FullName { get; set; }
 
-        [Display(Name = "Adres")]
+        [Display(Name = "Adress")]
         public string Address { get; set; }
 
-        [Display(Name = "Cinsiyet")]
+        [Display(Name = "Gender")]
         public string Gender { get; set; }
 
-        [Display(Name = "Doğum Tarihi")]
+        [Display(Name = "BirthDate")]
         [DataType(DataType.DateTime)]
         public DateTime DateOfBirth { get; set; }
+        public ICollection<Order> Orders { get; set; }
 
         //seller icin
 

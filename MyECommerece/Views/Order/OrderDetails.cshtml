@@ -1,0 +1,30 @@
+﻿@model MyECommerece.Models.Order
+
+<h1>Order Details</h1>
+<p>Order ID: @Model.Id</p>
+<p>Order Date: @Model.OrderDate</p>
+<p>Total Amount: $@Model.TotalAmount</p>
+<p>Status: @Model.OrderStatus</p>
+
+<h3>Order Items</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>$@item.Price</td>
+                <td>$@(item.Price * item.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+</table>
