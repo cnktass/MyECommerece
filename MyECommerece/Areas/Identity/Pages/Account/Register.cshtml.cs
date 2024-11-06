@@ -73,6 +73,7 @@ namespace MyECommerece.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "Cinsiyet")]
             public string Gender { get; set; }
+            public string PhoneNumber { get; set; }
 
             [Required]
             [Display(Name = "Adres")]
@@ -106,7 +107,7 @@ namespace MyECommerece.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, FullName = Input.FullName, Address = Input.Address, Gender = Input.Gender, DateOfBirth = Input.DateOfBirth };
+                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, FullName = Input.FullName,PhoneNumber=Input.PhoneNumber, Address = Input.Address, Gender = Input.Gender, DateOfBirth = Input.DateOfBirth };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 var addRoleToUser = await _userManager.AddToRoleAsync(user, Input.Role);
                 if (result.Succeeded && addRoleToUser.Succeeded)
