@@ -15,7 +15,7 @@ namespace MyECommerece.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-
+        public DbSet<Invoice> Invoices { get; set; }
 
     }
 }

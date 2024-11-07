@@ -45,6 +45,17 @@ public class OrderController : Controller
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
+        var invoice = new Invoice
+        {
+            OrderId = order.Id,
+            InvoiceDate = DateTime.Now,
+            TotalAmount = order.TotalAmount,
+            BillingAddress = user.Address,
+            PhoneNumber = user.PhoneNumber
+        };
+
+        _context.Invoices.Add(invoice);
+        await _context.SaveChangesAsync();
 
         HttpContext.Session.Remove("Cart");//Sessiondaki islemler bitttikten sonra sepetteki urunleri sildik
         return RedirectToAction("OrderDetails", new { id = order.Id });
@@ -61,4 +72,19 @@ public class OrderController : Controller
 
         return View(order);
     }
+    public IActionResult InvoiceDetails(int id)
+    {
+        var invoice = _context.Invoices.Include(i => i.Order)
+            .ThenInclude(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .FirstOrDefault(i => i.OrderId == id);
+
+        if (invoice == null)
+        {
+            return NotFound();
+        }
+
+        return View(invoice);
+    }
+
 }
