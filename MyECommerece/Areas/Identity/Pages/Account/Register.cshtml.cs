@@ -54,34 +54,45 @@ namespace MyECommerece.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "Üyelik Tipi")]
+            [Display(Name = "Membership Type")]
             public string Role { get; set; }
 
-            [Required]
-            [Display(Name = "Kullanıcı Adı")]
+            [Display(Name = "Username")]
             public string UserName { get; set; }
-
-            [Required]
-            [Display(Name = "Adı & Soyadı")]
-            public string FullName { get; set; }
 
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
-            [Display(Name = "Cinsiyet")]
-            public string Gender { get; set; }
+            [Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
 
-            [Required]
-            [Display(Name = "Adres")]
+            [Display(Name = "Address")]
             public string Address { get; set; }
 
-            [Required]
-            [Display(Name = "Doğum Tarihi")]
-            public DateTime DateOfBirth { get; set; }
+            // User  fields
+            [Display(Name = "Full Name")]
+            public string FullName { get; set; }
+
+            [Display(Name = "Gender")]
+            public string Gender { get; set; }
+
+            [Display(Name = "Date of Birth")]
+            public DateTime? DateOfBirth { get; set; }
+
+            // Seller  fields
+            [Display(Name = "Company Name")]
+            public string CompanyName { get; set; }
+
+            [Display(Name = "Tax Number")]
+            public string TaxNumber { get; set; }
+
+            [Display(Name = "Trade Registry Number")]
+            public string TradeRegistryNumber { get; set; }
+
+            [Display(Name = "Mersis Number")]
+            public string MersisNumber { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -105,39 +116,76 @@ namespace MyECommerece.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, FullName = Input.FullName,PhoneNumber=Input.PhoneNumber, Address = Input.Address, Gender = Input.Gender, DateOfBirth = Input.DateOfBirth };
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                var addRoleToUser = await _userManager.AddToRoleAsync(user, Input.Role);
-                if (result.Succeeded && addRoleToUser.Succeeded)
+                var user = new ApplicationUser
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    PhoneNumber = Input.PhoneNumber,
+                    Address = Input.Address
+                };
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                if (Input.Role == "User")
+                {
+                    user.FullName = Input.FullName;
+                    user.Gender = Input.Gender;
+                    user.DateOfBirth = Input.DateOfBirth;
+                }
+                else if (Input.Role == "Seller")
+                {
+                    user.CompanyName = Input.CompanyName;
+                    user.TaxNumber = Input.TaxNumber;
+                    user.TradeRegistryNumber = Input.TradeRegistryNumber;
+                    user.MersisNumber = Input.MersisNumber;
+                }
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                var result = await _userManager.CreateAsync(user, Input.Password);
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                if (result.Succeeded)
+                {
+                    var addRoleToUser = await _userManager.AddToRoleAsync(user, Input.Role);
+
+                    if (addRoleToUser.Succeeded)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        _logger.LogInformation("User created a new account with password.");
+
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                            protocol: Request.Scheme);
+
+                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        {
+                            return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        foreach (var error in addRoleToUser.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
 
