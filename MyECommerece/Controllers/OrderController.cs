@@ -72,12 +72,14 @@ public class OrderController : Controller
 
         return View(order);
     }
-    public IActionResult InvoiceDetails(int id)
+    public async Task<IActionResult> InvoiceDetails(int id)
     {
-        var invoice = _context.Invoices.Include(i => i.Order)
-            .ThenInclude(o => o.OrderItems)
+        var invoice = await _context.Invoices
+            .Include(i => i.Order)
+            .ThenInclude(o => o.ApplicationUser)
+            .Include(i => i.Order.OrderItems)
             .ThenInclude(oi => oi.Product)
-            .FirstOrDefault(i => i.OrderId == id);
+            .FirstOrDefaultAsync(i => i.OrderId == id);
 
         if (invoice == null)
         {
@@ -86,5 +88,7 @@ public class OrderController : Controller
 
         return View(invoice);
     }
+
+
 
 }
