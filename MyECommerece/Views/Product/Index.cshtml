@@ -7,7 +7,10 @@
     {
         <div class="col-md-4 mb-4">
             <div class="card">
-                <img src="@product.PhotoPath" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
+                <a asp-action="Details" asp-route-id="@product.Id">
+                    <img src="@product.PhotoPath" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
+                </a>
+                
 
                 <div class="card-body text-center">
                     <h5 class="card-title">
@@ -15,10 +18,14 @@
                      </h5>
                     <p class="card-text">Price: $@product.Price</p>
                 </div>
-                <div class="btn-group">
-                    <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-warning">Delete</a>
-                </div>
+                @if (User.IsInRole("Seller"))
+                {
+                    <div class="btn-group">
+                        <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-warning">Delete</a>
+                    </div>
+                }
+                
 
             </div>
         </div>

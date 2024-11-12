@@ -1,17 +1,17 @@
 ﻿@model MyECommerece.Models.Invoice
 
 <h1>Invoice</h1>
+<p><strong>Full Name:</strong> @Model.Order.ApplicationUser.FullName</p>
 <p><strong>Invoice Date:</strong> @Model.InvoiceDate.ToShortDateString()</p>
 <p><strong>Billing Address:</strong> @Model.BillingAddress</p>
 <p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
 <p><strong>Total Amount:</strong> $@Model.TotalAmount</p>
 <h3>Customer Information</h3>
-<p><strong>Full Name:</strong> @Model.Order.ApplicationUser.FullName</p>
+
 <p><strong>Company Name:</strong> @Model.Order.ApplicationUser.CompanyName</p>
 <p><strong>Tax Number:</strong> @Model.Order.ApplicationUser.TaxNumber</p>
 <p><strong>Trade Registry Number:</strong> @Model.Order.ApplicationUser.TradeRegistryNumber</p>
 <p><strong>Mersis Number:</strong> @Model.Order.ApplicationUser.MersisNumber</p>
-<p><strong>Address:</strong> @Model.Order.ApplicationUser.Address</p>
 
 <h2>Order Items</h2>
 <table class="table">

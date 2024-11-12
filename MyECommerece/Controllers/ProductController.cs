@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyECommerece.Data;
 using MyECommerece.Models;
@@ -23,12 +24,14 @@ namespace MyECommerece.Controllers
             var products = await _context.Products.ToListAsync();
             return View(products);
         }
+        [Authorize(Roles = "Seller")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Create(Product product, IFormFile Photo)
         {
             ModelState.Remove("PhotoPath");
@@ -60,7 +63,7 @@ namespace MyECommerece.Controllers
             }
             return View(product);
         }
-
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,6 +80,7 @@ namespace MyECommerece.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Edit(int id, Product product)
         {
             if (id != product.Id)
@@ -122,7 +126,7 @@ namespace MyECommerece.Controllers
 
             return View(product);
         }
-
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -140,6 +144,7 @@ namespace MyECommerece.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
