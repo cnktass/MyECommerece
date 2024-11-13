@@ -72,6 +72,17 @@ public class OrderController : Controller
 
         return View(order);
     }
+    public async Task<IActionResult> OrderDetailsList()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var orders = await _context.Orders
+           .Include(o => o.OrderItems)
+           .ThenInclude(oi => oi.Product) 
+           .Where(o => o.ApplicationUserId == user.Id)
+           .ToListAsync();
+
+        return View(orders);
+    }
     public async Task<IActionResult> InvoiceDetails(int id)
     {
         var invoice = await _context.Invoices

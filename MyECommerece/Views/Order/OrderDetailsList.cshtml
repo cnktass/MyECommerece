@@ -1,0 +1,32 @@
+﻿@model IEnumerable<MyECommerece.Models.Order>
+
+<h2>My Orders</h2>
+
+@if (!Model.Any())
+{
+    <p>You have no orders yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Total Amount</th>
+                <th>Order Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                    <td>@order.TotalAmount.ToString("C")</td>
+                    <td>
+                        <a asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-info">View Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
