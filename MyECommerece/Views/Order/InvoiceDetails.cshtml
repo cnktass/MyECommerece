@@ -6,12 +6,20 @@
 <p><strong>Billing Address:</strong> @Model.BillingAddress</p>
 <p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
 <p><strong>Total Amount:</strong> $@Model.TotalAmount</p>
-<h3>Customer Information</h3>
 
-<p><strong>Company Name:</strong> @Model.Order.ApplicationUser.CompanyName</p>
-<p><strong>Tax Number:</strong> @Model.Order.ApplicationUser.TaxNumber</p>
-<p><strong>Trade Registry Number:</strong> @Model.Order.ApplicationUser.TradeRegistryNumber</p>
-<p><strong>Mersis Number:</strong> @Model.Order.ApplicationUser.MersisNumber</p>
+<h3>Seller Information</h3>
+@if (ViewBag.Seller != null)
+{
+    <p><strong>Seller Name:</strong> @ViewBag.Seller.FullName</p>
+    <p><strong>Company Name:</strong> @ViewBag.Seller.CompanyName</p>
+    <p><strong>Tax Number:</strong> @ViewBag.Seller.TaxNumber</p>
+    <p><strong>Trade Registry Number:</strong> @ViewBag.Seller.TradeRegistryNumber</p>
+    <p><strong>Mersis Number:</strong> @ViewBag.Seller.MersisNumber</p>
+}
+else
+{
+    <p><em>Seller information not available.</em></p>
+}
 
 <h2>Order Items</h2>
 <table class="table">

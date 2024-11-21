@@ -96,7 +96,12 @@ public class OrderController : Controller
         {
             return NotFound();
         }
+        var firstProduct = invoice.Order.OrderItems.FirstOrDefault()?.Product;
+        var seller = firstProduct != null
+            ? await _context.Users.FirstOrDefaultAsync(u => u.Id == firstProduct.SellerId)
+            : null;
 
+        ViewBag.Seller = seller;
         return View(invoice);
     }
 

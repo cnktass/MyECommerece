@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyECommerece.Data;
@@ -11,11 +12,13 @@ namespace MyECommerece.Controllers
         private readonly ApplicationDbContext _context;
 
         private readonly IWebHostEnvironment _environment;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductController(ApplicationDbContext context, IWebHostEnvironment environment)
+        public ProductController(ApplicationDbContext context, IWebHostEnvironment environment, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _environment = environment;
+            _userManager = userManager;
         }
 
 
@@ -30,10 +33,19 @@ namespace MyECommerece.Controllers
             return View();
         }
 
+
         [HttpPost]
         [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Create(Product product, IFormFile Photo)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
+            product.SellerId = user.Id;
+
             ModelState.Remove("PhotoPath");
 
             if (ModelState.IsValid)
@@ -61,8 +73,12 @@ namespace MyECommerece.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(product);
         }
+
+
+
         [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Edit(int? id)
         {
