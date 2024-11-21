@@ -21,6 +21,8 @@ namespace MyECommerece.Models
         public string Description { get; set; }
 
         [Display(Name = "Photo")]
-        public string PhotoPath { get; set; }
+        public string? PhotoPath { get; set; }
+        public string? SellerId { get; set; }
+        public ApplicationUser? Seller { get; set; }
     }
 }

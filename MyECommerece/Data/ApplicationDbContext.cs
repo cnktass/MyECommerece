@@ -17,5 +17,16 @@ namespace MyECommerece.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Product>()
+                .HasOne(p => p.Seller)
+                .WithMany(u => u.Products)
+                .HasForeignKey(p=>p.SellerId)
+                .OnDelete(DeleteBehavior.NoAction);
+                
+        }
+
     }
 }

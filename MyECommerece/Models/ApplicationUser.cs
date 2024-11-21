@@ -33,5 +33,8 @@ namespace MyECommerece.Models
         [Display(Name = "Mersis Number")]
         public string? MersisNumber { get; set; }
 
+        public ICollection<Product> Products { get; set; }
+       
+
     }
 }
